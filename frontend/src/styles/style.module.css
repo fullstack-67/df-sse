@@ -1,0 +1,9 @@
+.clockText {
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.clockWrapper {
+  display: flex;
+  justify-content: space-between;
+}
