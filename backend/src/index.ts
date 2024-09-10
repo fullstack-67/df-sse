@@ -22,6 +22,13 @@ interface Todo {
 let todos: Todo[] = [];
 let subs: Subs[] = [];
 
+function broadcastToAllSubscribers(subs: Subs[], mode: "ADD" | "DELETE") {
+  subs.forEach((s) => {
+    debug(`Sending to ${s.id}`);
+    s.res.write(`data: ${mode}\n\n`);
+  });
+}
+
 // * Endpoints
 app.get("/subscribe", async (req, res, next) => {
   const headers = {
@@ -56,13 +63,18 @@ app.post("/todos", (req, res, next) => {
       id: nanoid(),
       title: req.body.title ?? "",
     });
-    subs.forEach((s) => {
-      debug(`Sending to ${s.id}`);
-      s.res.write("data: ping\n\n");
-    });
-  } else {
-    res.end();
+    broadcastToAllSubscribers(subs, "ADD");
   }
+  res.end();
+});
+
+app.delete("/todos", (req, res, next) => {
+  const id = req.body?.id ?? "";
+  if (id) {
+    todos = todos.filter((todo) => todo.id !== id);
+    broadcastToAllSubscribers(subs, "DELETE");
+  }
+  res.end();
 });
 
 // * Running app
