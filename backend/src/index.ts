@@ -25,7 +25,7 @@ app.get("/clock", async (req, res, next) => {
     res.write(`data: ${dtStr}\n\n`);
   }, 1000);
 
-  res.on("close", () => {
+  req.on("close", () => {
     debug("Close connection");
     clearInterval(intervalID);
   });
