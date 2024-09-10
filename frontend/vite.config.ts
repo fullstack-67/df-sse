@@ -33,7 +33,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ""),
         configure: configureFn,
       },
-      "/clock": {
+      "/subscribe": {
         target: "http://localhost:3001",
         changeOrigin: true,
         secure: false,
